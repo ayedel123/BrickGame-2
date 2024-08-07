@@ -1,14 +1,14 @@
 #include "gameInfo.h"
 
 void initGameInfo(GameInfo_t *gameInfo, int **field, int speed,
-                  int acceleration) {
+                  int acceleration,int brick_type) {
   gameInfo->winInfo.height = GAME_WINDOW_HEIGHT;
   gameInfo->winInfo.width = GAME_WINDOW_WIDTH;
   gameInfo->colorCount = COLOR_COUNT;
   gameInfo->field = field;
-  bornBrick(&gameInfo->currentBrick, gameInfo->winInfo.width / 2, 0, -1,
+  bornBrick(&gameInfo->currentBrick, gameInfo->winInfo.width / 2, 0, brick_type,
             gameInfo->colorCount);
-  bornBrick(&gameInfo->nextBrick, gameInfo->winInfo.width / 2, 0, -1,
+  bornBrick(&gameInfo->nextBrick, gameInfo->winInfo.width / 2, 0, brick_type,
             gameInfo->colorCount);
   gameInfo->points = 0;
   gameInfo->level = 1;

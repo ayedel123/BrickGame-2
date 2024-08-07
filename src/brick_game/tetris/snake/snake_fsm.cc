@@ -1,6 +1,6 @@
-#include "fsm.h"
+#include "snake_fsm.h"
 
-void spawHandler(GameInfo_t *gameInfo, tetris_state *state) {
+void spawHandler(GameInfo_t *gameInfo, game_states *state) {
   addPoints(gameInfo, fullLineHandler(gameInfo));
   if (resetBrick(gameInfo) != COL_STATE_NO)
     *state = GAMEOVER;
@@ -33,8 +33,8 @@ void getMoveData(int signal, int *direction, int *angle) {
   };
 }
 
-void movingHandler(GameInfo_t *gameInfo, tetris_state *state,
-                   tetris_signals signal, WINDOW **windows) {
+void movingHandler(GameInfo_t *gameInfo, game_states *state,
+                   signals signal, WINDOW **windows) {
 
   if (signal == PAUSE) {
     *state = ONPAUSE;
@@ -43,6 +43,7 @@ void movingHandler(GameInfo_t *gameInfo, tetris_state *state,
     int angle = 0;
     getMoveData(signal, &direction, &angle);
     int col = moveBrick(gameInfo, &gameInfo->currentBrick, direction, angle);
+    col = SnakeHandleCollision(col, direction);
     if (col == COL_STATE_CRIT) {
       *state = SPAWN;
     }
@@ -57,8 +58,8 @@ void movingHandler(GameInfo_t *gameInfo, tetris_state *state,
   }
 }
 
-void startHandler(GameInfo_t *gameInfo, tetris_state *state,
-                  tetris_signals signal, WINDOW *gameWin) {
+void startHandler(GameInfo_t *gameInfo, game_states *state,
+                  signals signal, WINDOW *gameWin) {
   startMessage(gameWin, gameInfo->winInfo.width, gameInfo->winInfo.width);
 
   if (signal == START_SIG) {
@@ -70,8 +71,8 @@ void startHandler(GameInfo_t *gameInfo, tetris_state *state,
   }
 }
 
-void gameOverHandler(GameInfo_t *gameInfo, tetris_state *state,
-                     tetris_signals signal, WINDOW *gameWin) {
+void gameOverHandler(GameInfo_t *gameInfo, game_states *state,
+                     signals signal, WINDOW *gameWin) {
 
   gameOverMessage(gameWin, gameInfo->winInfo.width, gameInfo->winInfo.width);
   if (signal != NOSIG) {
@@ -82,9 +83,9 @@ void gameOverHandler(GameInfo_t *gameInfo, tetris_state *state,
   }
 }
 
-void exitHandler(tetris_state *state) { *state = EXIT; }
+void exitHandler(game_states *state) { *state = static_cast<game_states>(EXIT); }
 
-void pauseHandler(tetris_state *state, tetris_signals signal) {
+void pauseHandler(game_states *state, signals signal) {
   if (signal == PAUSE) {
     *state = MOVING;
   } else if (signal == EXIT) {
@@ -92,8 +93,8 @@ void pauseHandler(tetris_state *state, tetris_signals signal) {
   }
 }
 
-GameInfo_t updateCurrentState(GameInfo_t gameInfo, tetris_state *state,
-                              tetris_signals signal, WINDOW **windows) {
+GameInfo_t updateCurrentState(GameInfo_t gameInfo, game_states *state,
+                              signals signal, WINDOW **windows) {
 
   switch (*state) {
 
@@ -120,8 +121,8 @@ GameInfo_t updateCurrentState(GameInfo_t gameInfo, tetris_state *state,
   return gameInfo;
 }
 
-tetris_signals getSignal(int userInput) {
-  tetris_signals rc = NOSIG;
+signals getSignal(int userInput) {
+  signals rc = NOSIG;
 
   // if (userInput == KEY_UP)
   //   rc = MOVE_UP;
@@ -130,6 +131,8 @@ tetris_signals getSignal(int userInput) {
     rc = MOVE_DOWN;
   else if (userInput == KEY_LEFT)
     rc = MOVE_LEFT;
+  else if (userInput == KEY_UP)
+    rc = MOVE_UP;
   else if (userInput == KEY_RIGHT)
     rc = MOVE_RIGHT;
   else if (userInput == KEY_ROTATE_LEFT)

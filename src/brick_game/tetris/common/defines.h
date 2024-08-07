@@ -26,6 +26,39 @@ typedef enum {
   Action
 } UserAction_t;
 
+typedef enum {
+  MOVE_UP = 0,
+  MOVE_DOWN,
+  MOVE_RIGHT,
+  MOVE_LEFT,
+  ROTATE_LEFT,
+  ROTATE_RIGHT,
+  PAUSE,
+  EXIT,
+  START_SIG,
+  NOSIG
+} signals;
+
+typedef enum
+{
+  START = 0,
+  SPAWN,
+  MOVING,
+  COLLIDE,
+  GAMEOVER,
+  ONPAUSE,
+  EXIT_STATE
+} game_states;
+
+#define ESCAPE 27
+#define KEY_ROTATE_LEFT 'q'
+#define KEY_ROTATE_RIGHT 'e'
+#define KEY_ESCAPE '0'
+#define KEY_PAUSE ' '
+#define KEY_START '\n'
+
+#define COLLIDE_WITH_BORDER -1
+
 #define COL_STATE_NO 0
 #define COL_STATE_COL 1
 #define COL_STATE_CRIT 2

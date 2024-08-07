@@ -1,11 +1,14 @@
 CC = gcc
+GPP = gcc -std=c++17 
 CFLAGS =  -Werror -Wall -Wextra -std=c11
 
 PILK = pilk.c
-FRONTEND = gui/cli/getUserInput/*.c gui/cli/tetrisStats/*.c gui/cli/timer/*.c gui/cli/ui/*.c gui/cli/window/*.c
-TETRIS_BACK = brick_game/tetris/back/bricks/*.c brick_game/tetris/back/brickMovement/*.c brick_game/tetris/back/fullLineHandler/*.c brick_game/tetris/back/gameInfo/*.c brick_game/tetris/back/field/*.c
-TETRIS = brick_game/tetris/tetris/*.c
-TEST_SOURCES = brick_game/tetris/test/*.c brick_game/tetris/test/collisionTest/*.c brick_game/tetris/test/movementTest/*.c brick_game/tetris/test/fullLineHandlerTest/*.c brick_game/tetris/test/addPointsTest/*.c
+FRONTEND = gui/cli/getUserInput/*.cc gui/cli/tetrisStats/*.cc gui/cli/timer/*.cc gui/cli/ui/*.cc gui/cli/window/*.cc
+TETRIS_BACK = brick_game/tetris/back/bricks/*.cc brick_game/tetris/back/brickMovement/*.cc brick_game/tetris/back/fullLineHandler/*.cc brick_game/tetris/back/gameInfo/*.cc brick_game/tetris/back/field/*.cc
+TETRIS = brick_game/tetris/tetris/*.cc
+SNAKE = brick_game/tetris/snake/*.cc
+TEST_SOURCES = brick_game/tetris/test/*.cc brick_game/tetris/test/collisionTest/*.cc brick_game/tetris/test/movementTest/*.cc brick_game/tetris/test/fullLineHandlerTest/*.cc brick_game/tetris/test/addPointsTest/*.cc
+MAIN = brick_game/main.cc
 
 CURSES = -lncurses
 CHECK_FLAGS = -lcheck
@@ -30,6 +33,9 @@ all: gcov_report install run
 
 install: ${TETRIS_BACK} $(FRONTEND) ${TETRIS}
 		$(CC) $^ $(LIBS)  -o tetris.out
+
+snake: ${MAIN} ${TETRIS_BACK} $(FRONTEND) ${TETRIS} ${SNAKE}
+	$(GPP) $^ $(LIBS)  -o snake.out
 
 uninstall:
 	rm -f tetris.out
