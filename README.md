@@ -13,7 +13,7 @@ To uninstall, run: `make uninstall`
 
 ## Finite State Machine Diagram
 
-![Tetris fsm diagramm](fsm.png)
+![Tetris fsm diagramm](./src/dvi_data/fsm.png)
 
 ## Features
 
