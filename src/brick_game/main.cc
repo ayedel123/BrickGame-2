@@ -1,8 +1,15 @@
+
+
+extern "C"
+{
 #include <ncurses.h>
-#include <stdlib.h>
-#include "./tetris/tetris/tetris.h"
-#include "./tetris/snake/snake.h"
-// #include "./tetris/snake.h"
+//#include <cstdlib> // или <stdlib.h>, если у вас C
+}
+#include "./tetris/tetris.h"
+#include "./snake/snake.h"
+
+//#include <list>
+//  #include "./tetris/snake.h"
 
 void SetUp(WINDOW **windows, int winCount, GameInfo_t *gameInfo, int **field)
 {
@@ -12,7 +19,7 @@ void SetUp(WINDOW **windows, int winCount, GameInfo_t *gameInfo, int **field)
     initGameInfo(gameInfo, field, GAME_SPEED, GMAE_ACCELERATION, RANDOM_BRICK);
 }
 
-void print_menu(WINDOW *menu_win, int highlight, char *choices[], int n_choices)
+void print_menu(WINDOW *menu_win, int highlight, const char *choices[], int n_choices)
 {
     int x, y, i;
 
@@ -36,7 +43,7 @@ int ChoseGame(WINDOW *win)
     int height = 10, width = 30, start_y = 4, start_x = 4;
     int highlight = 0;
     int choice;
-    char *choices[] = {"Tetris", "Snake", "Exit"};
+    const char *choices[] = {"Tetris", "Snake", "Exit"};
     int n_choices = sizeof(choices) / sizeof(char *);
     while (1)
     {
@@ -71,16 +78,19 @@ int main()
     initField(&field, GAME_WINDOW_HEIGHT, GAME_WINDOW_WIDTH);
     clearField(field, GAME_WINDOW_HEIGHT, GAME_WINDOW_WIDTH);
     SetUp(windows, 2, &gameInfo, field);
+
     int game = ChoseGame(windows[0]);
     if (game == 0)
     {
-        TetrisGameLoop(&gameInfo, windows);
+        //TetrisSetUp(&gameInfo, field);
+        //TetrisGameLoop(&gameInfo, windows);
     }
     else if (game == 1)
     {
+        SnakeSetUp(&gameInfo, field);
         SnakeGameLoop(&gameInfo, windows);
     }
-    // 
+    //
     endwin();
     deleteField(field, GAME_WINDOW_HEIGHT);
 

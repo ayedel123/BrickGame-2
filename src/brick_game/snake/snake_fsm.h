@@ -1,12 +1,14 @@
 #ifndef __SNAKE_FSM__
 #define __SNAKE_FSM__
 
-#include "../../../gui/cli/cli.h"
+#include "../../gui/cli/cli.h"
 #include "../back/back.h"
-#include "../common/defines.h"
-#include "snake.h"
-
+// #include "snake.h"
+extern "C"
+{
 #include <curses.h>
+}
+#include "snake_functions.h"
 
 // typedef enum {
 //   S_START = 0,
@@ -17,8 +19,6 @@
 //   S_ONPAUSE,
 //   S_EXIT_STATE
 // } snake_state;
-
-
 
 // #define ESCAPE 27
 // #define KEY_ROTATE_LEFT 'q'

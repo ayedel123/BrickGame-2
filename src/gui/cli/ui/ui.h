@@ -1,14 +1,15 @@
 #ifndef __TETRIS_UI__
 #define __TETRIS_UI__
 
-#include "../../../brick_game/tetris/back/back.h"
+#include "../../../brick_game/back/back.h"
 #include "../window/window.h"
-
+extern "C"
+{
 #include <ctype.h>
 #include <ncurses.h>
 #include <stdlib.h>
 #include <time.h>
-
+}
 void drawField(WINDOW *win, GameInfo_t *gameManager);
 WINDOW *setUpWindow(int winNumber);
 int *setUpBrickGameWindows(WINDOW **windows, int winCount);

@@ -1,14 +1,21 @@
 
-#include "snake.h"
+#include "tetris.h"
 
-// void setUp(WINDOW **windows, int winCount, GameInfo_t *gameInfo, int **field) {
+// void TetrisSetUp(WINDOW **windows, int winCount, GameInfo_t *gameInfo, int **field)
+// {
 //   srand(time(0));
 //   cursesSetUp();
 //   setUpBrickGameWindows(windows, winCount);
-//   initGameInfo(gameInfo, field, GAME_SPEED, GMAE_ACCELERATION,3);
+//   initGameInfo(gameInfo, field, GAME_SPEED, GMAE_ACCELERATION, RANDOM_BRICK);
 // }
 
-int SnakeGameLoop(GameInfo_t *gameInfo, WINDOW **windows) {
+void TetrisSetUp(GameInfo_t *gameInfo, int **field)
+{
+  initGameInfo(gameInfo, field, GAME_SPEED, GMAE_ACCELERATION, RANDOM_BRICK);
+}
+
+int TetrisGameLoop(GameInfo_t *gameInfo, WINDOW **windows)
+{
 
   long long startTime = getTimeInMS();
   long long endTime = 0;
@@ -17,24 +24,26 @@ int SnakeGameLoop(GameInfo_t *gameInfo, WINDOW **windows) {
   int input = 0;
   game_states state = START;
 
-  while (keyVal != 404 && state != EXIT_STATE) {
+  while (keyVal != 404 && state != EXIT_STATE)
+  {
     input = userInput();
     *gameInfo =
-        updateCurrentState(*gameInfo, &state, getSignal(input), windows);
+        TetrisUpdateCurrentState(*gameInfo, &state, TetrisGetSignal(input), windows);
 
     endTime = getTimeInMS();
     if (state == MOVING &&
         endTime - startTime >=
-            gameInfo->speed - gameInfo->level * gameInfo->acceleration) {
+            gameInfo->speed - gameInfo->level * gameInfo->acceleration)
+    {
       startTime = getTimeInMS();
-     // *gameInfo = updateCurrentState(*gameInfo, &state, MOVE_DOWN, windows);
+      *gameInfo = TetrisUpdateCurrentState(*gameInfo, &state, MOVE_DOWN, windows);
     }
   }
 
   return 0;
 }
 
-int SnakeHandleCollision(int col, int dir)
+int TetrisHandleCollision(int col, int dir)
 {
   if (col == COL_STATE_NO)
     return COL_STATE_NO;
@@ -46,7 +55,8 @@ int SnakeHandleCollision(int col, int dir)
   return col;
 }
 
-// int main() {
+// int main()
+// {
 //   WINDOW *windows[3];
 //   GameInfo_t gameInfo;
 //   int **field = NULL;

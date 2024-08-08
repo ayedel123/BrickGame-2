@@ -43,9 +43,9 @@ void moveBrickInField(int **field, Brick *brick)
   }
 }
 
-int moveBrick(GameInfo_t *gameInfo, Brick *oldBrick, int direction, int angle)
+int TryToMove(GameInfo_t *gameInfo, Brick *oldBrick, int direction, int angle)
 {
-  Brick newBrick = *oldBrick;
+
   int result = COL_STATE_NO;
   for (int i = 0; i < 4 && result == COL_STATE_NO; i++)
   {
@@ -58,22 +58,36 @@ int moveBrick(GameInfo_t *gameInfo, Brick *oldBrick, int direction, int angle)
 
     if (direction != DIR_STATE)
     {
-      moveBrickCords(&newBrick, direction);
+      moveBrickCords(oldBrick, direction);
     }
     else if (angle != 0 && direction == DIR_STATE)
     {
-      rotateBrickCords(&newBrick, angle);
+      rotateBrickCords(oldBrick, angle);
     }
 
-    result = checkCollision(gameInfo, &newBrick, direction);
-    if (result == COL_STATE_NO)
-    {
-      *oldBrick = newBrick;
-    }
-
-    moveBrickInField(gameInfo->field, oldBrick);
+    result = checkCollision(gameInfo, oldBrick, direction);
   }
   return result;
 }
 
+int moveBrick(GameInfo_t *gameInfo, Brick *oldBrick, int direction, int angle)
+{
+  Brick newBrick = *oldBrick;
+  int result = COL_STATE_NO;
+  result = TryToMove(gameInfo, &newBrick, direction, angle);
 
+  if (result == COL_STATE_NO)
+  {
+    *oldBrick = newBrick;
+  }
+  moveBrickInField(gameInfo->field, oldBrick);
+  return result;
+}
+
+int ForceMoveBrick(GameInfo_t *gameInfo, Brick *oldBrick, int direction, int angle)
+{
+  deleteFromField(gameInfo->field, oldBrick);
+  moveBrickCords(oldBrick, direction);
+  moveBrickInField(gameInfo->field, oldBrick);
+  return 0;
+}

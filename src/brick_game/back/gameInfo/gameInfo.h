@@ -1,13 +1,15 @@
 #ifndef __GAME_MANAGER__
 #define __GAME_MANAGER__
 
-#include "../../common/defines.h"
+#include "../common/defines.h"
 #include "../bricks/bricks.h"
-
+extern "C"
+{
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct {
+}
+typedef struct
+{
   WinInfo winInfo;
   Brick currentBrick;
   Brick nextBrick;
@@ -26,7 +28,7 @@ void addPoints(GameInfo_t *gameInfo, int fullLines);
 void writeRecord(const char *filename, int record);
 int readRecord(const char *filename);
 void initGameInfo(GameInfo_t *gameInfo, int **field, int speed,
-                  int acceleration,int brick_type);
+                  int acceleration, int brick_type);
 void baseInitGameInfo(GameInfo_t *gameInfo);
 
 #endif

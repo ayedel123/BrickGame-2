@@ -1,15 +1,21 @@
 #include "snake_fsm.h"
 
-void spawHandler(GameInfo_t *gameInfo, game_states *state) {
+void spawHandler(GameInfo_t *gameInfo, game_states *state)
+{
   addPoints(gameInfo, fullLineHandler(gameInfo));
-  if (resetBrick(gameInfo) != COL_STATE_NO)
-    *state = GAMEOVER;
-  else
-    *state = MOVING;
+  // if (resetBrick(gameInfo) != COL_STATE_NO)
+  //   *state = GAMEOVER;
+  // else
+  //   *state = MOVING;
+  SpawnApple(gameInfo);
+  // bornBrick(&gameInfo->nextBrick, gameInfo->winInfo.width / 2, gameInfo->winInfo.height / 2, BRICK_TYPES_COUNT, 2);
+  *state = MOVING;
 }
 
-void getMoveData(int signal, int *direction, int *angle) {
-  switch (signal) {
+void getMoveData(int signal, int *direction, int *angle)
+{
+  switch (signal)
+  {
   case MOVE_UP:
     *direction = DIR_TOP;
     break;
@@ -34,69 +40,93 @@ void getMoveData(int signal, int *direction, int *angle) {
 }
 
 void movingHandler(GameInfo_t *gameInfo, game_states *state,
-                   signals signal, WINDOW **windows) {
+                   signals signal, WINDOW **windows)
+{
 
-  if (signal == PAUSE) {
+  if (signal == PAUSE)
+  {
     *state = ONPAUSE;
-  } else if (signal != EXIT) {
+  }
+  else if (signal != EXIT)
+  {
     int direction = DIR_STATE;
     int angle = 0;
     getMoveData(signal, &direction, &angle);
     int col = moveBrick(gameInfo, &gameInfo->currentBrick, direction, angle);
-    col = SnakeHandleCollision(col, direction);
-    if (col == COL_STATE_CRIT) {
+
+    col = SnakeHandleCollision(gameInfo, col, direction);
+    if (col == COL_STATE_CRIT)
+    {
       *state = SPAWN;
     }
-  } else
+  }
+  else
     *state = EXIT_STATE;
 
   drawField(windows[GAME_WIN], gameInfo);
-  if (*state == ONPAUSE) {
+  if (*state == ONPAUSE)
+  {
     printTetrisStats(windows[INFO_WIN], gameInfo, 0);
-  } else {
+  }
+  else
+  {
     printTetrisStats(windows[INFO_WIN], gameInfo, 1);
   }
 }
 
 void startHandler(GameInfo_t *gameInfo, game_states *state,
-                  signals signal, WINDOW *gameWin) {
+                  signals signal, WINDOW *gameWin)
+{
   startMessage(gameWin, gameInfo->winInfo.width, gameInfo->winInfo.width);
 
-  if (signal == START_SIG) {
+  if (signal == START_SIG)
+  {
     clearField(gameInfo->field, gameInfo->winInfo.height,
                gameInfo->winInfo.width);
     *state = SPAWN;
-  } else if (signal == EXIT) {
+  }
+  else if (signal == EXIT)
+  {
     *state = EXIT_STATE;
   }
 }
 
 void gameOverHandler(GameInfo_t *gameInfo, game_states *state,
-                     signals signal, WINDOW *gameWin) {
+                     signals signal, WINDOW *gameWin)
+{
 
   gameOverMessage(gameWin, gameInfo->winInfo.width, gameInfo->winInfo.width);
-  if (signal != NOSIG) {
-    if (signal != EXIT) {
+  if (signal != NOSIG)
+  {
+    if (signal != EXIT)
+    {
       *state = START;
-    } else
+    }
+    else
       *state = EXIT_STATE;
   }
 }
 
 void exitHandler(game_states *state) { *state = static_cast<game_states>(EXIT); }
 
-void pauseHandler(game_states *state, signals signal) {
-  if (signal == PAUSE) {
+void pauseHandler(game_states *state, signals signal)
+{
+  if (signal == PAUSE)
+  {
     *state = MOVING;
-  } else if (signal == EXIT) {
+  }
+  else if (signal == EXIT)
+  {
     *state = EXIT_STATE;
   }
 }
 
 GameInfo_t updateCurrentState(GameInfo_t gameInfo, game_states *state,
-                              signals signal, WINDOW **windows) {
+                              signals signal, WINDOW **windows)
+{
 
-  switch (*state) {
+  switch (*state)
+  {
 
   case START:
     startHandler(&gameInfo, state, signal, windows[GAME_WIN]);
@@ -121,7 +151,8 @@ GameInfo_t updateCurrentState(GameInfo_t gameInfo, game_states *state,
   return gameInfo;
 }
 
-signals getSignal(int userInput) {
+signals getSignal(int userInput)
+{
   signals rc = NOSIG;
 
   // if (userInput == KEY_UP)

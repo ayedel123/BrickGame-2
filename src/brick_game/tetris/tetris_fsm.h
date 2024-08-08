@@ -1,13 +1,13 @@
 #ifndef __TETRIS_FSM__
 #define __TETRIS_FSM__
 
-#include "../../../gui/cli/cli.h"
+#include "../../gui/cli/cli.h"
 #include "../back/back.h"
-#include "../common/defines.h"
 #include "tetris.h"
-
+extern "C"
+{
 #include <curses.h>
-
+}
 
 
 // typedef enum

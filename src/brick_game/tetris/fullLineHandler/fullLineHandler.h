@@ -1,8 +1,7 @@
 #ifndef __TETRIS_FULL_LINE_HANDLER__
 #define __TETRIS_FULL_LINE_HANDLER__
 
-#include "../brickMovement/checkCollision.h"
-#include "../gameInfo/gameInfo.h"
+#include "../../back/back.h"
 
 int fullLineHandler(GameInfo_t *gameInfo);
 
